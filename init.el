@@ -64,11 +64,12 @@ values."
           org-enable-org-journal-support t
           org-enable-hugo-support t)
      (mu4e :variables
+           mu4e-split-view 'vertical
            mu4e-change-filenames-when-moving t
            mu4e-installation-path "~/software/random/mu/mu4e/"
            mu4e-mu-binary "~/software/random/mu/mu/mu"
            mu4e-maildir "~/.maildirs"
-           mu4e-get-mail-command "mbsync muse-amuse"
+           mu4e-get-mail-command "mbsync gmail muse-amuse"
            mu4e-update-interval (* 6 3600)
            mu4e-html2text-command "pandoc -r html -w plain"
            mu4e-compose-signature-auto-include nil)

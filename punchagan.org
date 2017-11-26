@@ -328,6 +328,7 @@ Move items in ~Inbox.org~ file to respective journal files.
                                   (mu4e-sent-folder . "/gmail/[Gmail].Sent Mail")
                                   (mu4e-drafts-folder . "/gmail/[Gmail].Drafts")
                                   (mu4e-trash-folder . "/gmail/[Gmail].Trash")
+                                  (mu4e-refile-folder . "/gmail/[Gmail].Archive")
                                   (smtpmail-smtp-user . "punchagan@gmail.com")
                                   (smtpmail-mail-address . "punchagan@gmail.com")
                                   (smtpmail-default-smtp-server . "smtp.gmail.com")
