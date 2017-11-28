@@ -71,7 +71,7 @@ values."
            mu4e-maildir "~/.maildirs"
            mu4e-get-mail-command "mbsync gmail muse-amuse"
            mu4e-update-interval (* 6 3600)
-           mu4e-html2text-command "pandoc -r html -w plain"
+           mu4e-html2text-command "w3m -T text/html"
            mu4e-compose-signature-auto-include nil)
      python
      react
