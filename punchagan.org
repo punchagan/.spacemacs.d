@@ -347,6 +347,44 @@ Move items in ~Inbox.org~ file to respective journal files.
 
   (add-hook 'mu4e-update-pre-hook 'pc/imapfilter)
 #+END_SRC
+** Setup bookmarks
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'mu4e-bookmarks
+               (make-mu4e-bookmark
+                :name "All Inboxes"
+                :query "maildir:/muse-amuse/INBOX OR maildir:/gmail/INBOX"
+                :key ?i))
+
+  (add-to-list 'mu4e-bookmarks
+               (make-mu4e-bookmark
+                :name "All Inboxes (Unread)"
+                :query "(maildir:/muse-amuse/INBOX OR maildir:/gmail/INBOX) AND flag:unread"
+                :key ?I))
+
+  (add-to-list 'mu4e-bookmarks
+               (make-mu4e-bookmark
+                :name "GMail Inbox"
+                :query "maildir:/gmail/INBOX"
+                :key ?g))
+
+  (add-to-list 'mu4e-bookmarks
+               (make-mu4e-bookmark
+                :name "GMail Inbox (Unread)"
+                :query "maildir:/gmail/INBOX AND flag:unread"
+                :key ?G))
+
+  (add-to-list 'mu4e-bookmarks
+               (make-mu4e-bookmark
+                :name "muse-amuse Inbox"
+                :query "maildir:/muse-amuse/INBOX"
+                :key ?m))
+
+  (add-to-list 'mu4e-bookmarks
+               (make-mu4e-bookmark
+                :name "muse-amuse Inbox (Unread)"
+                :query "maildir:/muse-amuse/INBOX AND flag:unread"
+                :key ?M))
+#+END_SRC
 * Fun
 ** Play music using ~mpsyt~
 #+BEGIN_SRC emacs-lisp
