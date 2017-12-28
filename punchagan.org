@@ -335,6 +335,17 @@ Move items in ~Inbox.org~ file to respective journal files.
                                   (smtpmail-smtp-server . "smtp.gmail.com")
                                   (smtpmail-smtp-service . 587)))))
 #+END_SRC
+** Some context tricks
+Fill user ~mu4e-user-mail-address-list~ from contexts
+#+BEGIN_SRC emacs-lisp
+  (setq mu4e-user-mail-address-list
+        (delq nil
+              (mapcar (lambda (context)
+                        (when (mu4e-context-vars context)
+                          (cdr (assq 'user-mail-address (mu4e-context-vars context)))))
+                      mu4e-contexts)))
+
+#+END_SRC
 ** Setup imapfilter hook
  #+BEGIN_SRC emacs-lisp
   (defun pc/imapfilter ()
