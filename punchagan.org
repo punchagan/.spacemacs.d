@@ -191,32 +191,56 @@ Use a file to list all the agenda files, explicitly
 #+BEGIN_SRC emacs-lisp
   (setq org-journal-file-format "%Y%m%d.org")
 #+END_SRC
-**** Template
-A hack to insert a daily template
-#+BEGIN_SRC emacs-lisp
-  (defun pc/new-buffer-p ()
-    (not (file-exists-p (buffer-file-name))))
-
-  (defun pc/insert-journal-template ()
-    (let ((template-file (expand-file-name "template.org" org-directory)))
-      (when (pc/new-buffer-p)
-        (save-excursion
-          (goto-char (point-min))
-          (insert-file-contents template-file)))))
-
-  (add-hook 'org-journal-after-entry-create-hook #'pc/insert-journal-template)
-#+END_SRC
 **** Date heading format
-Change the date heading format to go with the daily template
+Change the date heading format to not insert the weekday twice
 #+BEGIN_SRC emacs-lisp
-  (setq org-journal-date-format "Journal notes")
+  (setq org-journal-date-format "%x")
 #+END_SRC
 **** Refile Inbox.org items
 Move items in ~Inbox.org~ file to respective journal files.
-- TODO items move under tasks
 - NOTES move under the journal notes heading
 #+BEGIN_SRC emacs-lisp
+  (defun pc/refile-inbox-item ()
+    "Refile the item at point to a journal file."
+    (interactive)
+    (save-mark-and-excursion
+      (save-match-data
+        (org-back-to-heading :invisible-ok)
+        (let* ((timestamp (or (org-entry-get (point) "CLOSED")
+                              (org-entry-get (point) "CREATED")))
+               (time (apply 'encode-time (org-parse-time-string timestamp)))
+               (todo-state (org-entry-get (point) "TODO"))
+               (cut-marker (point-marker))
+               yank-pos)
+          (unless (string= todo-state "TODO")
+            (org-cut-special)
+            (org-journal-new-entry t time)
+            (unless (eq (current-column) 0) (insert "\n"))
+            (insert "*")
+            (setq yank-pos (point))
+            (org-yank t)
+            (goto-char yank-pos)
+            (move-beginning-of-line nil)
+            (search-forward " ")
+            (when (org-entry-is-done-p)
+              (search-forward " "))
+            (insert (format-time-string org-journal-time-format time))
+            (org-up-heading-safe)
+            (org-sort-entries nil ?t)
+            (save-buffer)
+            (switch-to-buffer-other-window (marker-buffer cut-marker))
+            (goto-char (marker-position cut-marker)))))))
 
+  (defun pc/refile-inbox-all ()
+    (interactive)
+    (let ((inbox (expand-file-name "Inbox.org" org-directory)))
+      (with-current-buffer (find-file-noselect inbox)
+        (goto-char (point-min))
+        (org-first-headline-recenter)
+        (ignore-errors
+          (while t
+            (pc/refile-inbox-item)))
+        (save-buffer))))
 #+END_SRC
 *** org-protocol
 #+BEGIN_SRC emacs-lisp
