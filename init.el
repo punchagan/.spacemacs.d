@@ -61,6 +61,7 @@ values."
                  js-indent-level 4)
      markdown
      (org :variables
+          org-startup-indented t
           org-enable-org-journal-support t
           org-enable-hugo-support t)
      (mu4e :variables
