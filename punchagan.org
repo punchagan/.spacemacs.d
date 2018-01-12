@@ -224,7 +224,7 @@ Move items in ~Inbox.org~ file to respective journal files.
               (search-forward " "))
             (insert (format-time-string org-journal-time-format time))
             (org-up-heading-safe)
-            (org-sort-entries nil ?t)
+            (org-sort-entries nil ?a)
             (save-buffer)
             (switch-to-buffer-other-window (marker-buffer cut-marker))
             (goto-char (marker-position cut-marker)))))))
@@ -243,6 +243,30 @@ Move items in ~Inbox.org~ file to respective journal files.
 *** org-protocol
 #+BEGIN_SRC emacs-lisp
   (require 'org-protocol)
+#+END_SRC
+**** Add handlers in emacs
+#+BEGIN_SRC emacs-lisp
+  (defun transform-square-brackets-to-round-ones (string-to-transform)
+    "Transforms [ into ( and ] into ), other chars left unchanged."
+    (concat
+     (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c)))
+             string-to-transform)))
+
+  (add-to-list 'org-capture-templates
+               '("p"
+                 "Protocol"
+                 entry
+                 (file "Inbox.org")
+                 "* %:description\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n%:link\n\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE\n\n%?"))
+#+END_SRC
+*** ox-capture
+#+BEGIN_SRC emacs-lisp
+  (add-to-list 'org-capture-templates
+               '("t"
+                 "TODO"
+                 entry
+                 (file "Inbox.org")
+                 "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:\n"))
 #+END_SRC
 *** ox-hugo
 **** Export on save
