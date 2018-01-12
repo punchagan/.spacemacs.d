@@ -1,5 +1,3 @@
-#+STARTUP: indent
-
 This is all the code that gets run inside the user-config function in
 dotspacemacs. The sections are organized similar to the layers of Spacemacs.
 
@@ -302,6 +300,36 @@ Move items in ~Inbox.org~ file to respective journal files.
         (goto-char (point-min))
         (save-buffer)
         (kill-buffer))))
+#+END_SRC
+*** org-super-agenda
+**** Enable super agenda
+#+BEGIN_SRC emacs-lisp
+  (org-super-agenda-mode +1)
+#+END_SRC
+**** Set super agenda groups
+Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/master/examples.org
+#+BEGIN_SRC emacs-lisp
+  (setq org-super-agenda-groups
+        '((:log t)  ; Automatically named "Log"
+          (:name "Schedule"
+                 :time-grid t)
+          (:name "Today"
+                 :scheduled today)
+          ;; (:habit t)
+          (:name "Due today"
+                 :deadline today)
+          (:name "Overdue"
+                 :deadline past)
+          (:name "Due soon"
+                 :deadline future)
+          (:name "Unimportant"
+                 :todo ("SOMEDAY" "MAYBE" "CHECK" "TO-READ" "TO-WATCH")
+                 :order 100)
+          (:name "Waiting..."
+                 :todo "WAITING"
+                 :order 98)
+          (:name "Scheduled earlier"
+                 :scheduled past)))
 #+END_SRC
 ** General
 *** confirm on quit
