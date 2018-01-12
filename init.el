@@ -52,7 +52,8 @@ values."
      (git :variables
           magit-repository-directories '("~/software/my-repos/"
                                          "~/software/random/"
-                                         "~/software/akvo/"))
+                                         "~/software/akvo/")
+          magit-revision-show-gravatars nil)
      github
      graphviz
      html
