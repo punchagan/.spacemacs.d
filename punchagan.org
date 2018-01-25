@@ -243,6 +243,7 @@ Move items in ~Inbox.org~ file to respective journal files.
 *** org-protocol
 #+BEGIN_SRC emacs-lisp
   (require 'org-protocol)
+  (setq org-protocol-protocol-alist org-protocol-protocol-alist-default)
 #+END_SRC
 **** Add handlers in emacs
 #+BEGIN_SRC emacs-lisp
@@ -357,6 +358,26 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
 #+END_SRC
 ** General
 *** confirm on quit
+*** org-books
+#+BEGIN_SRC emacs-lisp
+  (require 'org-books)
+  (setq org-books-file (expand-file-name "Books.org" org-directory))
+#+END_SRC
+**** Define a protocol for adding books by url
+#+BEGIN_SRC emacs-lisp
+  (defun pc/add-books (x)
+    (let* ((url (org-protocol-sanitize-uri
+                (plist-get (org-protocol-parse-parameters x nil '(:url))
+                           :url)))
+          (stripped-url (save-match-data
+                          (if (string-match "'$" url)
+                              (replace-match "" t t url)
+                            url))))
+      (org-books-add-url stripped-url)))
+
+  (add-to-list 'org-protocol-protocol-alist
+               '("org-books-add-url" :protocol "add-book" :function pc/add-books))
+#+END_SRC
 #+BEGIN_SRC emacs-lisp
   (setq confirm-kill-emacs 'y-or-n-p)
 #+END_SRC
