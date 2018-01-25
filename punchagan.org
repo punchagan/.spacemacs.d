@@ -357,8 +357,6 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
           (:name "Scheduled earlier"
                  :scheduled past)))
 #+END_SRC
-** General
-*** confirm on quit
 *** org-books
 #+BEGIN_SRC emacs-lisp
   (require 'org-books)
@@ -379,6 +377,8 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
   (add-to-list 'org-protocol-protocol-alist
                '("org-books-add-url" :protocol "add-book" :function pc/add-books))
 #+END_SRC
+** General
+*** confirm on quit
 #+BEGIN_SRC emacs-lisp
   (setq confirm-kill-emacs 'y-or-n-p)
 #+END_SRC
