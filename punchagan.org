@@ -386,8 +386,9 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
 ** js
 *** Use prettier in js buffers
 #+BEGIN_SRC emacs-lisp
-  ;; (remove-hook 'js2-mode-hook 'prettier-js-mode)
-  ;; (remove-hook 'web-mode-hook 'prettier-js-mode)
+  (add-hook 'js2-mode-hook 'prettier-js-mode)
+  (add-hook 'web-mode-hook 'prettier-js-mode)
+  (add-hook 'react-mode-hook 'prettier-js-mode)
 #+END_SRC
 * Email
 ** Setup mu4e contexts
