@@ -267,7 +267,7 @@ Move items in ~Inbox.org~ file to respective journal files.
                  "TODO"
                  entry
                  (file "Inbox.org")
-                 "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:\n"))
+                 "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:\n%a\n"))
 #+END_SRC
 *** ox-hugo
 **** Export on save
