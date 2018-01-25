@@ -273,7 +273,8 @@ Move items in ~Inbox.org~ file to respective journal files.
 **** Export on save
 #+BEGIN_SRC emacs-lisp
   (require 'ox)
-  (add-hook 'after-save-hook #'org-hugo-export-subtree-to-md-after-save)
+  (setq org-hugo-allow-export-after-save nil)
+  (add-hook 'after-save-hook #'org-hugo-export-wim-to-md-after-save)
 #+END_SRC
 **** Capture template for new post
 #+BEGIN_SRC emacs-lisp
