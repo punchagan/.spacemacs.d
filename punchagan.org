@@ -604,3 +604,26 @@ Fill user ~mu4e-user-mail-address-list~ from contexts
 #+BEGIN_SRC emacs-lisp
   (setq shr-width 80)
 #+END_SRC
+*** Mark job entries as read based on keywords
+#+BEGIN_SRC emacs-lisp
+  (setq pc/interesting-job-words '("python" "django" "backend" "back end" "back-end"
+                                   "javascript" "react" "elm" "frontend" "front end" "front-end"
+                                   "fullstack" "full stack" "full-stack"
+                                   "clojure" "functional" "haskell"
+                                   "visual" "d3" "2d" "3d" "three.js"
+                                   "data" "analy" "learning" "predict" "machine" "deep"
+                                   "research" "news" "journal"
+                                   "git " "emacs" "go " "golang" ))
+
+  (defun pc/mark-uninteresting-jobs-as-read ()
+    "Mark uninteresting entries tagged with jobs as read"
+    (interactive)
+    (let ((regexp (mapconcat 'identity pc/interesting-job-words "\\|")))
+      (dolist (feed-url (elfeed-feed-list))
+        (dolist (entry (elfeed-feed-entries feed-url))
+          (when (and (member 'unread (elfeed-entry-tags entry))
+                     (member 'jobs (elfeed-entry-tags entry))
+                     (not (s-matches? regexp (elfeed-entry-title entry))))
+            (print (elfeed-entry-title entry))
+            (elfeed-untag entry 'unread))))))
+#+END_SRC
