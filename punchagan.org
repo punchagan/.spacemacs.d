@@ -608,7 +608,7 @@ Fill user ~mu4e-user-mail-address-list~ from contexts
 #+BEGIN_SRC emacs-lisp
   (setq pc/interesting-job-words '("python" "django" "backend" "back end" "back-end"
                                    "javascript" "react" "elm" "frontend" "front end" "front-end"
-                                   "fullstack" "full stack" "full-stack"
+                                   "fullstack" "full stack" "full-stack" "software engineer"
                                    "clojure" "functional" "haskell"
                                    "visual" "d3" "2d" "3d" "three.js"
                                    "data" "analy" "learning" "predict" "machine" "deep"
@@ -625,5 +625,6 @@ Fill user ~mu4e-user-mail-address-list~ from contexts
                      (member 'jobs (elfeed-entry-tags entry))
                      (not (s-matches? regexp (elfeed-entry-title entry))))
             (print (elfeed-entry-title entry))
-            (elfeed-untag entry 'unread))))))
+            (elfeed-untag entry 'unread))))
+      (elfeed-db-save)))
 #+END_SRC
