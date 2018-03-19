@@ -390,6 +390,23 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
   (add-hook 'web-mode-hook 'prettier-js-mode)
   (add-hook 'react-mode-hook 'prettier-js-mode)
 #+END_SRC
+** Python
+*** Use white in Python buffers
+#+BEGIN_SRC emacs-lisp
+  (setq pc/python-run-black-on-save nil)
+
+  (defun pc/python-run-black ()
+    "Hook to run 'black' on python buffers."
+    (when (and pc/python-run-black-on-save
+               (derived-mode-p 'python-mode)
+               (buffer-file-name))
+      (call-process "black" nil '("*black-process*" t) nil "-l" "79" (buffer-file-name))
+      (with-current-buffer "*black-process*"
+        (message (s-trim (s-replace-all '(("%". "%%")) (buffer-string))))
+        (kill-buffer))))
+
+  (add-hook 'after-save-hook #'pc/python-run-black)
+#+END_SRC
 * Email
 ** Setup mu4e contexts
 #+BEGIN_SRC emacs-lisp
