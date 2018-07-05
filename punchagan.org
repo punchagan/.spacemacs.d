@@ -13,7 +13,11 @@ Turn on lexical binding, so that we can use it in the code that follows!
 #+BEGIN_SRC emacs-lisp
   (sp-use-paredit-bindings)
 #+END_SRC
-
+** Auth
+*** auth sources
+#+BEGIN_SRC emacs-lisp
+(setq auth-sources '("~/.authinfo.gpg" "~/.authinfo" "~/.netrc"))
+#+END_SRC
 * Chat
 ** Jabber
 **** Account setup
