@@ -244,6 +244,28 @@ Move items in ~Inbox.org~ file to respective journal files.
             (pc/refile-inbox-item)))
         (save-buffer))))
 #+END_SRC
+**** Journal and Todo functions that run from shell scripts
+#+BEGIN_SRC emacs-lisp
+  (defun pc/journal ()
+    "Make a journal entry at the current time."
+    (let* ((title "What are you doing?")
+           (frame (or
+                   (car (filtered-frame-list
+                         (lambda (f)
+                           (string= title (cdr (assq 'title (frame-parameters f)))))))
+                   (make-frame
+                    `((title . ,title)
+                      (user-position . t)
+                      (left . (+ 550))
+                      (top . (+ 400))
+                      (width . 120)
+                      (height . 40))))))
+      (select-frame frame)
+      (org-journal-new-entry nil)
+      (recenter 0)
+      (raise-frame)
+      (x-focus-frame (selected-frame))))
+#+END_SRC
 *** org-protocol
 #+BEGIN_SRC emacs-lisp
   (require 'org-protocol)
