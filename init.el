@@ -64,7 +64,7 @@ values."
      markdown
      (org :variables
           org-startup-indented t
-          org-enable-org-journal-support t
+          org-enable-org-journal-support nil
           org-enable-hugo-support t)
      (mu4e :variables
            mu4e-use-maildirs-extension t

@@ -183,20 +183,14 @@ Use a file to list all the agenda files, explicitly
   (add-to-list 'org-babel-load-languages '(ditaa . t))
 #+END_SRC
 *** org-journal
-**** Set org-journal-dir inside org-directory
+**** Use datetree capture for journal
 #+BEGIN_SRC emacs-lisp
-  (setq org-journal-dir (expand-file-name "journal/" org-directory))
-#+END_SRC
-**** Use .org extension for journal files
-- To be able to view TODO items in the agenda
-- To be able to view files in Orgzly
-#+BEGIN_SRC emacs-lisp
-  (setq org-journal-file-format "%Y%m%d.org")
-#+END_SRC
-**** Date heading format
-Change the date heading format to not insert the weekday twice
-#+BEGIN_SRC emacs-lisp
-  (setq org-journal-date-format "%x")
+  (add-to-list 'org-capture-templates
+               '("j"
+                 "Journal"
+                 entry
+                 (file+olp+datetree "journal.org")
+                 "* %?"))
 #+END_SRC
 **** Refile Inbox.org items
 Move items in ~Inbox.org~ file to respective journal files.
@@ -261,7 +255,10 @@ Move items in ~Inbox.org~ file to respective journal files.
                       (width . 120)
                       (height . 40))))))
       (select-frame frame)
-      (org-journal-new-entry nil)
+      (org-capture-goto-target "j")
+      (org-narrow-to-subtree)
+      (goto-char (buffer-end 1))
+      (delete-other-windows)
       (recenter 0)
       (raise-frame)
       (x-focus-frame (selected-frame))))
