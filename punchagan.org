@@ -272,18 +272,12 @@ Move items in ~Inbox.org~ file to respective journal files.
 #+END_SRC
 **** Add handlers in emacs
 #+BEGIN_SRC emacs-lisp
-  (defun transform-square-brackets-to-round-ones (string-to-transform)
-    "Transforms [ into ( and ] into ), other chars left unchanged."
-    (concat
-     (mapcar #'(lambda (c) (if (equal c ?[) ?\( (if (equal c ?]) ?\) c)))
-             string-to-transform)))
-
   (add-to-list 'org-capture-templates
-               '("p"
-                 "Protocol"
-                 entry
-                 (file "Inbox.org")
-                 "* %:description\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n%:link\n\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE\n\n%?"))
+             '("p"
+               "Protocol"
+               entry
+               (file "Inbox.org")
+               "* %:description\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n%:link\n\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE\n\n%?"))
 #+END_SRC
 *** ox-capture
 #+BEGIN_SRC emacs-lisp
