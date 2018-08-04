@@ -397,6 +397,14 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
   (add-to-list 'org-protocol-protocol-alist
                '("org-books-add-url" :protocol "add-book" :function pc/add-books))
 #+END_SRC
+*** zulip
+**** convert zulip markdown to org-mode
+#+BEGIN_SRC emacs-lisp
+  (defun pc/zulip-to-org (begin end)
+    (interactive "r")
+    (when (use-region-p)
+      (shell-command-on-region begin end "pandoc -r markdown -w org" t t)))
+#+END_SRC
 ** General
 *** confirm on quit
 #+BEGIN_SRC emacs-lisp
