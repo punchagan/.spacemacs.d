@@ -602,6 +602,28 @@ Fill user ~mu4e-user-mail-address-list~ from contexts
 #+BEGIN_SRC emacs-lisp
   (bind-key "<f8>" 'pc/mpsyt-url-at-point)
 #+END_SRC
+** Screenshots to Emacs
+#+BEGIN_SRC emacs-lisp
+  (require 'f)
+  (require 'ox-hugo)  ; We use the slug function
+
+  (defun pc/create-screenshot-file ()
+    (unless (eq major-mode 'org-mode)
+      (error "Not implemented: works only in org-mode"))
+    (let* ((slug (org-hugo-slug (org-no-properties (org-get-heading))))
+           (random-hash (substring (uuidgen-4) 0 8))
+           (filename (format "%s-%s.png" slug random-hash))
+           (path (f-join (f-parent (buffer-file-name)) filename))
+           (command (format "~/bin/screenshot2file %s" path)))
+      (call-process-shell-command command nil '(0 t))
+      path))
+
+  (defun pc/insert-screenshot ()
+    (interactive)
+    (let ((path (pc/create-screenshot-file)))
+      (insert (format "[[file://%s]]" path))
+      (org-display-inline-images)))
+#+END_SRC
 * Scimax
 #+BEGIN_SRC emacs-lisp
   (setq scimax-dir "~/software/random/scimax")
