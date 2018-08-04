@@ -410,6 +410,11 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
   (add-hook 'web-mode-hook 'prettier-js-mode)
   (add-hook 'react-mode-hook 'prettier-js-mode)
 #+END_SRC
+*** Set prettier-js command
+#+BEGIN_SRC emacs-lisp
+  (setq prettier-js-show-errors 'echo
+        prettier-js-command "prettier-eslint")
+#+END_SRC
 ** Python
 *** Use white in Python buffers
 #+BEGIN_SRC emacs-lisp

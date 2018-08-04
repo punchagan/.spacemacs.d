@@ -99,9 +99,7 @@ values."
    ;; configuration in `dotspacemacs/user-config'.
    dotspacemacs-additional-packages
    '(
-     (prettier-js :variables
-                  prettier-js-show-errors 'echo
-                  prettier-js-command "prettier-eslint")
+     prettier-js
      (ox-hugo :location "~/software/random/ox-hugo")
      org-super-agenda
      enlive ;; required by org-books
