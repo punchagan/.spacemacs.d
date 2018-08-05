@@ -79,7 +79,7 @@ values."
            mu4e-mu-binary "~/software/random/mu/mu/mu"
            mu4e-maildir "~/.maildirs"
            mu4e-get-mail-command "mbsync gmail muse-amuse"
-           mu4e-update-interval (* 6 3600)
+           mu4e-update-interval (* 2 3600)
            mu4e-html2text-command "w3m -T text/html"
            mu4e-compose-signature-auto-include nil)
      python
