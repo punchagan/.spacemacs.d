@@ -4,7 +4,8 @@ dotspacemacs. The sections are organized similar to the layers of Spacemacs.
 * Startup
 Turn on lexical binding, so that we can use it in the code that follows!
 #+BEGIN_SRC emacs-lisp
-;; -*- lexical-binding: t -*-
+  ;; -*- lexical-binding: t -*-
+  (setenv "DISPLAY" ":0")
 #+END_SRC
 
 * Spacemacs layers?
@@ -243,6 +244,7 @@ Move items in ~Inbox.org~ file to respective journal files.
   (require 'org-clock)
   (defun pc/journal ()
     "Make a journal entry at the current time."
+    (interactive)
     (let* ((title "What are you doing?")
            (frame (or
                    (car (filtered-frame-list
@@ -263,8 +265,7 @@ Move items in ~Inbox.org~ file to respective journal files.
       (outline-show-subtree)
       (goto-char (buffer-end 1))
       (delete-other-windows)
-      (raise-frame)
-      (x-focus-frame (selected-frame))))
+      (shell-command (format "wmctrl -a \"%s\"" title))))
 #+END_SRC
 *** org-protocol
 #+BEGIN_SRC emacs-lisp
