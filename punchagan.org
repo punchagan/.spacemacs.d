@@ -338,14 +338,18 @@ Move items in ~Inbox.org~ file to respective journal files.
       (make-directory content-dir t)
       (copy-file (buffer-file-name) path t)
       (with-current-buffer (find-file-noselect path)
-        ;; Delete all draft posts
+        (org-content 100)
+        ;; Delete all noexport tagged headings
         (save-mark-and-excursion
-          (org-map-entries (lambda () (org-mark-subtree) (delete-region (point) (mark)))
-                           "EXPORT_FILE_NAME<>\"\"/!+TODO|+DRAFT"
-                           'file))
+          (org-map-entries (lambda ()
+                             (org-mark-subtree)
+                             (delete-region (point) (mark))
+                             (setq org-map-continue-from (point-min)))
+                           ;; Match all posts which are DRAFT or TODO
+                           "noexport"
+                           nil))
         (goto-char (point-min))
-        (save-buffer)
-        (kill-buffer))))
+        (save-buffer))))
 #+END_SRC
 *** org-super-agenda
 **** Enable super agenda
