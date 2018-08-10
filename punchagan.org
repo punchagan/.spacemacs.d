@@ -626,8 +626,9 @@ Fill user ~mu4e-user-mail-address-list~ from contexts
     (let* ((slug (org-hugo-slug (org-no-properties (org-get-heading))))
            (random-hash (substring (uuidgen-4) 0 8))
            (filename (format "%s-%s.png" slug random-hash))
-           (path (f-join (f-parent (buffer-file-name)) filename))
+           (path (f-join (f-parent (buffer-file-name)) "images" filename))
            (command (format "~/bin/screenshot2file %s" path)))
+      (f-mkdir (f-parent path))
       (call-process-shell-command command nil '(0 t))
       path))
 
