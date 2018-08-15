@@ -70,6 +70,7 @@ values."
           org-refile-targets '(:level . 4)
           org-enable-hugo-support t)
      (mu4e :variables
+           sendmail-program "/home/punchagan/bin/msmtp.py"
            mu4e-use-maildirs-extension t
            mu4e-use-fancy-chars t
            mail-user-agent 'mu4e-user-agent
