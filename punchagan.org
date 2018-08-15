@@ -434,6 +434,7 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
   (require 'f)
   (setq pc/python-run-black-on-save t)
   (setq pc/black-directories (list "/home/punchagan/software/thatte-idli"
+                                   "/home/punchagan/software/upai"
                                    "/home/punchagan/software/my-repos"))
 
   (defun pc/python-run-black ()
