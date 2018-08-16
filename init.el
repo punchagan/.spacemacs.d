@@ -68,7 +68,7 @@ values."
      (org :variables
           org-startup-indented t
           org-enable-org-journal-support nil
-          org-refile-targets '(:level . 4)
+          org-refile-targets '((org-agenda-files :maxlevel . 5))
           org-enable-hugo-support t)
      (mu4e :variables
            sendmail-program "/home/punchagan/bin/msmtp.py"
