@@ -4,11 +4,11 @@
 # --
 
 #+BEGIN_EXPORT html
-<a target="_blank" href="http://edte.ch/blog/2015/09/29/how-to-make-the-most-of-30-feedback/">Looking for $1% feedback
-<svg viewBox="0 0 64 64" style="background: red; width: 100px; border-radius: 50%">
-<circle r="25%" cx="50%" cy="50%" style="stroke-dasharray: $1 100; stroke-dashoffset: 0; fill: none; stroke-width: 32px; stroke: green;">
+<a target="_blank" href="http://edte.ch/blog/2015/09/29/how-to-make-the-most-of-30-feedback/">
+<svg viewBox="0 0 64 64" style="background: lightgray; width: 40px; border-radius: 50%">
+<circle r="25%" cx="50%" cy="50%" style="stroke-dasharray: $1 100; stroke-dashoffset: 0; fill: none; stroke-width: 32px; stroke: black;">
 </circle>
-<text x="40%" y="50%" style="font: italic 13px sans-serif; fill: white;">$1</text>
 </svg>
+Looking for $1% feedback
 </a>
 #+END_EXPORT
