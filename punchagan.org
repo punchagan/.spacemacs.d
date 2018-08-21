@@ -338,7 +338,7 @@ Move items in ~Inbox.org~ file to respective journal files.
 
       (make-directory content-dir t)
       (copy-file (buffer-file-name) path t)
-      (with-current-buffer (find-file-noselect path)
+      (with-current-buffer (find-file path)
         (org-content 100)
         ;; Delete all noexport tagged headings
         (save-mark-and-excursion
