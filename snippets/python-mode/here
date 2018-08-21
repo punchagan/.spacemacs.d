@@ -1,0 +1,7 @@
+# -*- mode: snippet -*-
+# name: here
+# key: here
+# --
+
+from os.path import abspath, dirname
+HERE = dirname(abspath(__file__))
