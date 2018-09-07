@@ -438,7 +438,7 @@ This function is called at the very end of Spacemacs initialization."
  '(pos-tip-background-color "#073642")
  '(pos-tip-foreground-color "#93a1a1")
  '(safe-local-variable-values
-   '((org-hugo-allow-export-after-save . t)
+   '((org-hugo-auto-export-after-save . t)
      (javascript-backend . tern)
      (javascript-backend . lsp)
      (projectile-enable-idle-timer)))

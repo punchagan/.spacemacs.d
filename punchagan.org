@@ -293,8 +293,7 @@ Move items in ~Inbox.org~ file to respective journal files.
 *** ox-hugo
 **** Export on save
 #+BEGIN_SRC emacs-lisp
-  (require 'ox)
-  (setq org-hugo-allow-export-after-save nil)
+  (require 'ox-hugo-auto-export)
   (add-hook 'after-save-hook #'org-hugo-export-wim-to-md-after-save)
 #+END_SRC
 **** Capture template for new post
