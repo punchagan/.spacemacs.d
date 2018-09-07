@@ -409,6 +409,40 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
     (when (use-region-p)
       (shell-command-on-region begin end "pandoc -r markdown -w org" t t)))
 #+END_SRC
+**** Post from Org-mode to Zulip
+#+BEGIN_SRC emacs-lisp
+  (require 'ox-gfm)
+
+  (defun pc/zulip-send-message (realm stream topic message)
+    "Send a message to a given realm, stream & topic"
+    (call-process "zulip-send" nil t t
+                  "--site" realm
+                  "-s" stream
+                  "-S" topic
+                  "--config-file" (expand-file-name (format "%s.zrc" realm) "~/.zuliprc")
+                  "-m" message
+                  "-v"))
+
+  (defun pc/zulip-get-subtree-content ()
+    (let ((org-export-with-toc nil)
+          (org-export-show-temporary-export-buffer nil)
+          (buffer (org-gfm-export-as-markdown nil t t))
+          (char-re ))
+      (with-current-buffer buffer
+        (goto-char (point-min))
+        (while (re-search-forward "\\\\\\([*#]\\)" nil t)
+          (replace-match "\\1"))
+        (org-no-properties (buffer-string)))))
+
+  (defun pc/zulip-send-org-subtree ()
+    (interactive)
+    (let* ((realm (cdr (assoc "ZULIP_REALM" (org-entry-properties (point) "ZULIP_REALM"))))
+           (stream (cdr (assoc "ZULIP_STREAM" (org-entry-properties (point) "ZULIP_STREAM"))))
+           (topic (cdr (assoc "ZULIP_TOPIC" (org-entry-properties (point) "ZULIP_TOPIC"))))
+           (message (pc/zulip-get-subtree-content)))
+      (pc/zulip-send-message realm stream topic message)))
+
+#+END_SRC
 ** General
 *** confirm on quit
 #+BEGIN_SRC emacs-lisp

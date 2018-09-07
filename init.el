@@ -109,6 +109,7 @@ values."
      enlive ;; required by org-books
      (org-books :location "~/software/random/org-books")
      (pycoverage :location "~/software/random/pycoverage.el/")
+     ox-gfm
      )
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
