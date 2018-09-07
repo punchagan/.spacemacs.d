@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: checkin
+# key: checkin
+# --
+`(format-time-string "Checkins! %A. %B %d, %Y")`
