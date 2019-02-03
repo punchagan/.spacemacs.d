@@ -239,7 +239,7 @@ Move items in ~Inbox.org~ file to respective journal files.
             (pc/refile-inbox-item)))
         (save-buffer))))
 #+END_SRC
-**** Journal and Todo functions that run from shell scripts
+**** Journal function that run from shell scripts
 #+BEGIN_SRC emacs-lisp
   (require 'org-clock)
   (defun pc/journal ()
@@ -256,15 +256,19 @@ Move items in ~Inbox.org~ file to respective journal files.
                       (left . (+ 550))
                       (top . (+ 400))
                       (width . 120)
-                      (height . 40))))))
+                      (height . 40)))))
+           buffer)
       (select-frame frame)
       (if (org-clocking-p)
           (org-clock-goto)
         (org-capture-goto-target "j"))
+      (setq buffer (current-buffer))
+      (delete-other-windows)
+      (org-agenda nil "a")
+      (pop-to-buffer buffer)
       (org-narrow-to-subtree)
       (outline-show-subtree)
       (goto-char (buffer-end 1))
-      (delete-other-windows)
       (shell-command (format "wmctrl -a \"%s\"" title))))
 #+END_SRC
 *** org-protocol
