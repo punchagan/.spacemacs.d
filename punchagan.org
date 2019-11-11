@@ -613,6 +613,10 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
   (add-hook 'after-save-hook #'pc/python-run-black)
 
 #+END_SRC
+** Git
+#+begin_src emacs-lisp
+  (add-hook 'git-commit-mode-hook (lambda () (setq fill-column 76)))
+#+end_src
 * Email
 ** Setup mu4e contexts
 #+BEGIN_SRC emacs-lisp
@@ -719,6 +723,12 @@ Fill user ~mu4e-user-mail-address-list~ from contexts
                 :name "muse-amuse Inbox (Unread)"
                 :query "maildir:/muse-amuse/INBOX AND flag:unread"
                 :key ?M))
+#+END_SRC
+** Compose mode fill-column length
+Not sure who fill-paragraphs or something to the message, messing up the
+formatting. Setting fill-column to 65 helps.
+#+BEGIN_SRC emacs-lisp
+  (setq message-fill-column 65)
 #+END_SRC
 * Fun
 ** Play music using ~mpsyt~
