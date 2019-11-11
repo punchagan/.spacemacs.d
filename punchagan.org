@@ -158,6 +158,21 @@ Switch to the buffer when notification is clicked.
 
   (add-hook 'jabber-post-connect-hooks 'pc/jabber-flush-queue)
 #+END_SRC
+** IRC
+*** servers and channels
+#+begin_src emacs-lisp
+  (setq rcirc-server-alist
+        '(("irc.freenode.net" :channels ("#dgplug" "#fossee" "#emacs-in" "##linux-india"))))
+#+end_src
+*** nick
+#+begin_src emacs-lisp
+  (setq rcirc-default-nick "punchagan")
+#+end_src
+*** auth
+#+begin_src emacs-lisp
+  (setq rcirc-authinfo
+        `(("freenode" nickserv "punchagan" ,(cadr (auth-source-user-and-password "freenode")))))
+#+end_src
 * Emacs
 ** Org
 *** org-mode
