@@ -490,12 +490,13 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
 * Email
 ** Setup mu4e contexts
 #+BEGIN_SRC emacs-lisp
-  (defun make-match-func-from-email (email)
-    (lambda (msg)
-      (when msg
-        (mu4e-message-contact-field-matches
-         msg
-         :to email))))
+  (defmacro make-match-func-from-email (email)
+    `(lambda (msg)
+       (when msg
+         (mu4e-message-contact-field-matches
+          msg
+          :to ,email))))
+
 
   (setq mu4e-contexts `(
                         ,(make-mu4e-context
