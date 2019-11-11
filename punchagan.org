@@ -198,6 +198,10 @@ Use a file to list all the agenda files, explicitly
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-babel-load-languages '(ditaa . t))
 #+END_SRC
+**** Enable org-tempo with new org version
+#+begin_src emacs-lisp
+  (require 'org-tempo)
+#+end_src
 *** org-journal
 **** Use datetree capture for journal
 #+BEGIN_SRC emacs-lisp
@@ -280,6 +284,10 @@ Move items in ~Inbox.org~ file to respective journal files.
       (setq buffer (current-buffer))
       (delete-other-windows)
       (org-agenda nil "a")
+      (org-super-agenda-mode t)
+      (org-agenda-log-mode t)
+      (org-agenda-day-view)
+      (org-agenda-goto-today)
       (pop-to-buffer buffer)
       (org-narrow-to-subtree)
       (outline-show-subtree)
@@ -300,7 +308,29 @@ Move items in ~Inbox.org~ file to respective journal files.
                (file "Inbox.org")
                "* %:description\n:PROPERTIES:\n:CREATED: %U\n:END:\n\n%:link\n\n#+BEGIN_QUOTE\n%:initial\n#+END_QUOTE\n\n%?"))
 #+END_SRC
+*** org-pomodoro
+#+BEGIN_SRC emacs-lisp
+  (defun pc/get-shit-done-work ()
+    (interactive)
+    (let ((default-directory "/sudo::"))
+      (shell-command "HOME=/home/punchagan/ get-shit-done work"))
+    (shell-command "killall slack")
+    (shell-command "killall zulip")
+    (shell-command "killall electron")
+    (shell-command "fullscreen on"))
+
+  (defun pc/get-shit-done-play ()
+    (interactive)
+    (let ((default-directory "/sudo::"))
+      (shell-command "HOME=/home/punchagan/ get-shit-done play"))
+    (shell-command "fullscreen off"))
+
+  ;; Enable get-shit-done when clock is on!
+  (add-to-list 'org-clock-in-hook #'pc/get-shit-done-work)
+  (add-to-list 'org-clock-out-hook #'pc/get-shit-done-play)
+#+END_SRC
 *** ox-capture
+**** Capture template
 #+BEGIN_SRC emacs-lisp
   (add-to-list 'org-capture-templates
                '("t"
@@ -308,6 +338,24 @@ Move items in ~Inbox.org~ file to respective journal files.
                  entry
                  (file "Inbox.org")
                  "* TODO %? \n:PROPERTIES:\n:CREATED: %U\n:END:\n%a\n"))
+#+END_SRC
+**** Get all links from a web page as a list
+#+BEGIN_SRC emacs-lisp
+  (defun pc/page-links-to-org-list (url)
+    "Get all links on page as an org list"
+    (interactive "sURL: ")
+    (let* ((command (format "curl -s %s | pandoc -r html -w org | grep -ozP \"\\[\\[(.|\\s)*?\\]\\]\"" url))
+           links n)
+      (with-temp-buffer
+        (call-process-shell-command command nil t)
+        (goto-char (point-min))
+        (setq n (count-lines (point-min) (point-max)))
+        (dotimes (x n)
+          (insert "\n- ")
+          (search-forward " ")
+          (backward-delete-char 1))
+        (setq links (buffer-string)))
+      (insert links)))
 #+END_SRC
 *** ox-hugo
 **** Export on save
