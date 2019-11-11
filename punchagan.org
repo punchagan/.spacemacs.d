@@ -5,7 +5,6 @@ dotspacemacs. The sections are organized similar to the layers of Spacemacs.
 Turn on lexical binding, so that we can use it in the code that follows!
 #+BEGIN_SRC emacs-lisp
   ;; -*- lexical-binding: t -*-
-  (setenv "DISPLAY" ":0")
 #+END_SRC
 
 * Spacemacs layers?
