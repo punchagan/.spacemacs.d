@@ -405,7 +405,7 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
   (add-to-list 'org-protocol-protocol-alist
                '("org-books-add-url" :protocol "add-book" :function pc/add-books))
 #+END_SRC
-*** zulip
+*** org-zulip
 **** convert zulip markdown to org-mode
 #+BEGIN_SRC emacs-lisp
   (defun pc/zulip-to-org (begin end)
@@ -413,45 +413,105 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
     (when (use-region-p)
       (shell-command-on-region begin end "pandoc -r markdown -w org" t t)))
 #+END_SRC
-**** Post from Org-mode to Zulip
+**** Zulip helpers
 #+BEGIN_SRC emacs-lisp
-  (require 'ox-gfm)
+  (require 'zulip-helpers)
 
-  (defun pc/zulip-send-message (realm stream topic message)
-    "Send a message to a given realm, stream & topic"
-    (call-process "zulip-send" nil t t
-                  "--site" realm
-                  "-s" stream
-                  "-S" topic
-                  "--config-file" (expand-file-name (format "%s.zrc" realm) "~/.zuliprc")
-                  "-m" message
-                  "-v"))
+  ;; FIXME: Need to make this more legit!
+  ;; Changed 4 space indents to 2 for Zulip writes...
+  (defun org-md-item (item contents info)
+    "Transcode ITEM element into Markdown format.
+  CONTENTS is the item contents.  INFO is a plist used as
+  a communication channel."
+    (let* ((type (org-element-property :type (org-export-get-parent item)))
+           (struct (org-element-property :structure item))
+           (bullet (if (not (eq type 'ordered)) "-"
+                     (concat (number-to-string
+                              (car (last (org-list-get-item-number
+                                          (org-element-property :begin item)
+                                          struct
+                                          (org-list-prevs-alist struct)
+                                          (org-list-parents-alist struct)))))
+                             "."))))
+      (concat bullet
+              (make-string (- 2 (length bullet)) ? )
+              (pcase (org-element-property :checkbox item)
+                (`on "[X] ")
+                (`trans "[-] ")
+                (`off "[ ] "))
+              (let ((tag (org-element-property :tag item)))
+                (and tag (format "**%s:** "(org-export-data tag info))))
+              (and contents
+                   (org-trim (replace-regexp-in-string "^" "  " contents))))))
+#+END_SRC
+**** Stream of consciousness
+#+BEGIN_SRC emacs-lisp
+  (require 'f)
+  (defun pc/post-to-stream-of-consciousness (realm)
+    (interactive
+     (list
+      (completing-read "Realm: "
+                       (mapcar (lambda (path) (f-no-ext (f-filename path)))
+                               (f-files zulip-rc-directory)))))
+    (let ((inhibit-modification-hooks t))
+      (org-set-property "ZULIP_REALM" realm)
+      (org-set-property "ZULIP_STREAM" "consciousness")
+      (org-set-property "ZULIP_TOPIC" "Punch"))
 
-  (defun pc/zulip-get-subtree-content ()
-    (let ((org-export-with-toc nil)
-          (org-export-show-temporary-export-buffer nil)
-          (buffer (org-gfm-export-as-markdown nil t t))
-          (char-re ))
-      (with-current-buffer buffer
-        (goto-char (point-min))
-        (while (re-search-forward "\\\\\\([*#]\\)" nil t)
-          (replace-match "\\1"))
-        (org-no-properties (buffer-string)))))
-
-  (defun pc/zulip-send-org-subtree ()
+    (zulip-org-dwim-subtree))
+#+END_SRC
+**** Cheppandamma
+#+BEGIN_SRC emacs-lisp
+  (defun pc/cheppandamma ()
     (interactive)
-    (let* ((realm (cdr (assoc "ZULIP_REALM" (org-entry-properties (point) "ZULIP_REALM"))))
-           (stream (cdr (assoc "ZULIP_STREAM" (org-entry-properties (point) "ZULIP_STREAM"))))
-           (topic (cdr (assoc "ZULIP_TOPIC" (org-entry-properties (point) "ZULIP_TOPIC"))))
-           (message (pc/zulip-get-subtree-content)))
-      (pc/zulip-send-message realm stream topic message)))
+    (org-set-property "ZULIP_REALM" "park.zulipchat.com")
+    (org-set-property "ZULIP_STREAM" "Cheppandamma")
+    (org-set-property "ZULIP_TOPIC" "hello")
+    (zulip-org-dwim-subtree))
+#+END_SRC
+*** org-to-gist
+#+begin_src emacs-lisp
+  (require 'ox-hugo)
+  (defun pc/org-subtree-to-gist ()
+    (interactive)
+    (let* ((org-export-with-toc nil)
+           (org-export-with-sub-superscripts '{})
+           (switch-to-buffer-preserve-window-point t)
+           (gist (org-entry-get (point) "GIST_ID"))
+           (title (org-get-heading t t t t))
+           (filename (format "%s.md" (org-hugo-slug title)))
+           gist-obj
+           export-buffer
+           content-buffer)
+      (setq content-buffer (current-buffer))
+      (org-gfm-export-as-markdown nil t)
+      (setq export-buffer (current-buffer))
+      (if (null gist)
+          (flet ((gist-ask-for-description-maybe () ((lambda () title))))
+            (rename-buffer filename)
+            (markdown-mode)
+            (gist-region (point-min) (point-max) t)
+            (kill-buffer)
+            (setq gist (car (last (split-string (current-kill 0 t) "/"))))
+            (switch-to-buffer content-buffer)
+            (org-set-property "GIST_ID" gist))
+        (progn
+          (gist-fetch gist)
+          (replace-buffer-contents export-buffer)
+          (gist-mode-edit-buffer filename)
+          (kill-buffer)
+          (with-current-buffer export-buffer
+            (kill-buffer))
+          (setq gist-obj (gist-list-db-get-gist gist))
+          (kill-new (oref gist-obj :html-url) )
+          ;; Edit description, if required
+          (unless (string= title (oref gist-obj :description))
+            (flet ((tabulated-list-get-id () ((lambda () gist)))
+                   (read-from-minibuffer (x y) ((lambda () title)))
+                   (gist-list-reload () ()))
+              (gist-edit-current-description)))))))
 
-#+END_SRC
-** General
-*** confirm on quit
-#+BEGIN_SRC emacs-lisp
-  (setq confirm-kill-emacs 'y-or-n-p)
-#+END_SRC
+#+end_src
 * Lang
 ** js
 *** Use prettier in js buffers
