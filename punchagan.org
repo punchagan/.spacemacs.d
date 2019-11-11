@@ -586,7 +586,7 @@ Taken from an example here: https://github.com/alphapapa/org-super-agenda/blob/m
 *** Set prettier-js command
 #+BEGIN_SRC emacs-lisp
   (setq prettier-js-show-errors 'echo
-        prettier-js-command "prettier-eslint")
+        prettier-js-command "prettier")
 #+END_SRC
 ** Python
 *** Use white in Python buffers
