@@ -311,18 +311,18 @@ Move items in ~Inbox.org~ file to respective journal files.
 #+BEGIN_SRC emacs-lisp
   (defun pc/get-shit-done-work ()
     (interactive)
+    (shell-command "fullscreen on")
     (let ((default-directory "/sudo::"))
       (shell-command "HOME=/home/punchagan/ get-shit-done work"))
     (shell-command "killall slack")
     (shell-command "killall zulip")
-    (shell-command "killall electron")
-    (shell-command "fullscreen on"))
+    (shell-command "killall electron"))
 
   (defun pc/get-shit-done-play ()
     (interactive)
+    (shell-command "fullscreen off")
     (let ((default-directory "/sudo::"))
-      (shell-command "HOME=/home/punchagan/ get-shit-done play"))
-    (shell-command "fullscreen off"))
+      (shell-command "HOME=/home/punchagan/ get-shit-done play")))
 
   ;; Enable get-shit-done when clock is on!
   (add-to-list 'org-clock-in-hook #'pc/get-shit-done-work)
