@@ -321,6 +321,18 @@ Move items in ~Inbox.org~ file to respective journal files.
       (insert "\nToday for me:\n\n")
       (mapc (lambda (item) (insert (format "- %s\n" item))) headlines)))
 #+end_src
+***** Post an entry to clockwise
+#+begin_src emacs-lisp
+  (defun pc/clockwise-update-log (weekday)
+    (interactive "N")
+    (unless (region-active-p)
+      (error "Select a region to update the log"))
+    (let ((p (start-process "clockwise-log"
+                            "*clockwise-log-today*"
+                            "clockwise-log-today" "--weekday" (number-to-string weekday))))
+      (process-send-string p (buffer-substring (region-beginning) (region-end)))
+      (process-send-eof p)))
+#+end_src
 *** org-protocol
 #+BEGIN_SRC emacs-lisp
   (require 'org-protocol)
