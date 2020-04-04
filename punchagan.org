@@ -293,6 +293,29 @@ Move items in ~Inbox.org~ file to respective journal files.
       (goto-char (buffer-end 1))
       (shell-command (format "wmctrl -a \"%s\"" title))))
 #+END_SRC
+**** Create an entry for today's work
+#+begin_src emacs-lisp
+  (defun pc/akvo-today ()
+    (interactive)
+    (let ((headlines
+           (-remove 'null
+                    (org-map-entries
+                     (lambda () (when (> (org-clock-sum-current-item
+                                          (org-time-string-to-seconds
+                                           (org-read-date nil nil "today"))) 0)
+                                  (org-no-properties (org-get-heading t t t t))))
+                     "akvo" 'agenda))))
+      (org-insert-heading)
+      (insert "Notes for Today")
+      (org-set-tags ":akvo:")
+      (org-set-property "ZULIP_REALM" "akvo.zulipchat.com")
+      (org-set-property "ZULIP_STREAM" "rsr")
+      (org-set-property "ZULIP_TOPIC" "stand-up")
+      (org-narrow-to-subtree)
+      (end-of-buffer)
+      (insert "\nToday for me:\n\n")
+      (mapc (lambda (item) (insert (format "- %s\n" item))) headlines)))
+#+end_src
 *** org-protocol
 #+BEGIN_SRC emacs-lisp
   (require 'org-protocol)
