@@ -201,6 +201,11 @@ Use a file to list all the agenda files, explicitly
 #+begin_src emacs-lisp
   (require 'org-tempo)
 #+end_src
+**** Disable helm for org-set-tags-command
+#+begin_src emacs-lisp
+  (add-hook 'org-mode-hook
+            (lambda () (add-to-list 'helm-completing-read-handlers-alist '(org-set-tags-command))))
+#+end_src
 *** org-journal
 **** Use datetree capture for journal
 #+BEGIN_SRC emacs-lisp
